@@ -1,0 +1,11 @@
+title: Mobula yarae Niche Model
+description: Niche modeling analysis for Mobula yarae
+theme: jekyll-theme-cayman
+# O puedes usar otros temas como: minima, minimal, architect, etc.
+
+# Configuración de navegación
+header_pages:
+  - index.md
+  - about.md
+  - methods.md
+  - results.md
