@@ -2,11 +2,11 @@
 title: "Ejercicio de modelado de nicho de Mobula yarae"
 ---
 
-# Manual: Modelado de Nicho — *Mobula yarae*
+# Manual
 
 ## Índice
 <nav>
-  <a href="#paso-1">Paso 1: Preparación</a> |
+  <a href="#paso-1">I. Preparación de datos</a> |
   <a href="#paso-2">Paso 2: Datos</a> |
   <a href="#paso-3">Paso 3: Variables</a> |
   <a href="#paso-4">Paso 4: Modelado</a> |
