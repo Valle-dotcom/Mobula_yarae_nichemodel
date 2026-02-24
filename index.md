@@ -1,5 +1,5 @@
 ---
-title: "Manual — Modelado de Nicho (Mobula yarae)"
+title: "Ejercicio de modelado de nicho de Mobula yarae"
 ---
 
 # Manual: Modelado de Nicho — *Mobula yarae*
