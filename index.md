@@ -21,7 +21,7 @@ como una guía práctica introductoria al tema. Además, recomiendo también par
 
 Este ejercicio tiene como objetivo realizar un SDM y un ENM (para aprender más sobre las diferencias conceptuales entre estos dos tipos de modelos recomiendo
 [Soberón et al. 2017](https://doi.org/10.1016/j.rmb.2017.03.011)) de la mantarraya del Atlántico (*Mobula yarae*), una especie recién descrita por [Bucair et al. (2025)](https://doi.org/10.1007/s10641-025-01727-2) y de la cual aún no se conocen varios aspectos de su historia natural, incluyendo su área de distribución.
-En este ejercicio usaremos [*ellipsenm*](https://github.com/marlonecobos/ellipsenm2) un paquete de R el cual usa elipsoides para caracterizar el nicho de la especie.
+En este ejercicio usaremos [*ellipsenm* (Cobos et al. 2020)](https://github.com/marlonecobos/ellipsenm2) un paquete de R que utiliza envolturas elipsoidales para caracterizar el nicho de la especie [(Farber and Kadmon 2003)](https://doi.org/10.1016/S0304-3800(02)00327-7)
 
 
 
