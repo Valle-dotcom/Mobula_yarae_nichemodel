@@ -2,21 +2,35 @@
 title: "Ejercicio de modelado de nicho de Mobula yarae"
 ---
 
-# Manual
-
-## Índice
+# Flujo de trabajo
 <nav>
   <a href="#paso-1">I. Preparación de datos</a> |
-  <a href="#paso-2">Paso 2: Datos</a> |
-  <a href="#paso-3">Paso 3: Variables</a> |
-  <a href="#paso-4">Paso 4: Modelado</a> |
-  <a href="#paso-5">Paso 5: Resultados</a>
+  <a href="#paso-2">II. </a> |
+  <a href="#paso-3">III. </a> |
+  <a href="#paso-4">Paso</a> |
+  <a href="#paso-5">Paso</a>
 </nav>
 
 ---
+## Introducción
+El siguiente ejercicio está diseñado con la idea de que el estudiante pueda poner en práctica los pasos esenciales del flujo de trabajo para la 
+realización de modelos de distribución de especies (MDE o SDM en inglés) y modelos de nicho ecológico (MNE o ENM en inglés) para organismos marinos. 
+Este *workflow* está basado y adaptado a partir del manual de [Simoes et al. (2020)](https://doi.org/10.17161/bi.v15i2.13376), el cual recomiendo ampliamente 
+como una guía práctica introductoria al tema. Además, recomiendo también para la limpieza de datos el manual de [Cobos et al. (2018)](https://doi.org/10.17161/bi.v13i0.7600) y el libro de 
+[Peterson et al. (2011)](https://doi.org/10.1515/9781400840670?urlappend=%3Futm_source%3Dresearchgate.net%26utm_medium%3Darticle) como texto base para esta disciplina.
+
+Este ejercicio tiene como objetivo realizar un SDM y un ENM (para aprender más sobre las diferencias conceptuales entre estos dos tipos de modelos recomiendo
+[Soberón et al. 2017](https://doi.org/10.1016/j.rmb.2017.03.011)) de la mantarraya del Atlántico (*Mobula yarae*), una especie recién descrita por [Bucair et al. (2025)](https://doi.org/10.1007/s10641-025-01727-2) y de la cual aún no se conocen varios aspectos de su historia natural, incluyendo su área de distribución.
+En este ejercicio usaremos *[ellipsenm*](https://github.com/marlonecobos/ellipsenm2) el cual usa elipsoides para caracterizar el nicho de la especie.
+
+
+
+
 
 <a id="paso-1"></a>
-## Paso 1 — Preparación
+## I. Preparación de datos
+
+
 - Objetivo:
 - Requisitos:
 - Instalación:
