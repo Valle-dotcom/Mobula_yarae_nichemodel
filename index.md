@@ -33,7 +33,16 @@ En este ejercicio usaremos [*ellipsenm* (Cobos et al. 2020)](https://github.com/
 Debido a que *M. yarae* es una especie recién descrita, los datos presentes en [GBIF](https://www.gbif.org/es/)
 aún no presentan registros de esta especie. Ya que *M. yarae* es simpátrica con *M. birostris* [(Bucair et al.,2025)](https://doi.org/10.1007/s10641-025-01727-2), es necesario volver a reclasificar los registros de *M. birostris* que se encuentran dentro del área de distribución de *M. yarae*. Si bien para esto, y según [Bucair et al.,2025](https://doi.org/10.1007/s10641-025-01727-2) es necesario una identificación genética; para fines de este ejercicio vamos a realizar un proceso de limpieza estandarizado para MDE/MNE con los registros provenientes de GBIF para *M. birostris*.
 
+El archivo se encuentra dentro de la carpeta [input](https://github.com/Valle-dotcom/Mobula_yarae_niche/tree/main/input) con el nombre de *m_birostris.csv* Este es el [DOI](https://doi.org/10.15468/dl.jnav8h) con los metadatos de la base de datos descargada 
 
+
+Recuerda primero establecer tu directorio de trabajo con setwd()
+
+A continuación procederemos a leer el archivo con los registros que vamos a depurar
+```r
+x <- c(1, 2, 3)
+mean(x)
+```
 - Objetivo:
 - Requisitos:
 - Instalación:
