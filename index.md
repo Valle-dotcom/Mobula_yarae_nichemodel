@@ -173,9 +173,7 @@ summaryThin(p1)
 ```
 
 
-- Objetivo:
-- Requisitos:
-- Instalación:
+* CONTINUARÁ..........*
 
 <a id="paso-2"></a>
 ## Paso 2 — Datos
