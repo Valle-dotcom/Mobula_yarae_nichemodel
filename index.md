@@ -30,7 +30,8 @@ En este ejercicio usaremos [*ellipsenm* (Cobos et al. 2020)](https://github.com/
 <a id="paso-1"></a>
 ## I. Preparación de datos
 
-
+Debido a que *M. yarae* es una especie recién descrita, los datos presentes en [GBIF](https://www.gbif.org/es/)
+aún no presentan registros de esta especie. Ya que *M. yarae* es simpátrica con *M. birostris* [(Bucair et al.,2025)](https://doi.org/10.1007/s10641-025-01727-2), es necesario volver a reclasificar los registros de *M. birostris* que se encuentran dentro del área de distribución de *M. yarae*. Si bien para esto, y según [Bucair et al.,2025](https://doi.org/10.1007/s10641-025-01727-2) es necesario una identificación genética; para fines de este ejercicio vamos a realizar un proceso de limpieza estandarizado para MDE/MNE con los registros provenientes de GBIF para *M. birostris*.
 - Objetivo:
 - Requisitos:
 - Instalación:
