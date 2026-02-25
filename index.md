@@ -48,6 +48,8 @@ library(CoordinateCleaner)
 library(terra)
 library(geodata)
 library(spThin)
+library(rnaturalearth)
+library(rnaturalearthdata)
 
 # Definición del directorio de trabajo e importación
 setwd("ruta")
@@ -58,28 +60,33 @@ occurrences_raw <- read.csv("m_bevirostris.csv")
 Visualizar los datos crudos permite realizar un diagnóstico rápido para detectar errores comunes 
 
 ```r
-# --- 2. EXPLORACIÓN VISUAL CRUDA ---
+# --- 2. EXPLORACIÓN VISUAL ---
 
-# Filtro de seguridad informático básico para poder graficar
+# 1. Filtro de seguridad informático (remover NAs en coordenadas)
 occ_plot <- occurrences_raw[!is.na(occurrences_raw$decimalLongitude) & 
-                            !is.na(occurrences_raw$decimalLatitude), ]
+                              !is.na(occurrences_raw$decimalLatitude), ]
 
-# Conversión a vector espacial
+# 2. Conversión a vector espacial (SpatVector)
 occ_raw_vect <- vect(occ_plot, 
                      geom = c("decimalLongitude", "decimalLatitude"), 
                      crs = "EPSG:4326")
 
-# Descarga de mapa base
-world_map <- world(path = tempdir())
+# 3. Carga del mapa base de forma segura (offline)
+# Extraemos el mapa como objeto 'sf' y lo convertimos a 'SpatVector' para terra
+world_sf <- ne_countries(scale = "medium", returnclass = "sf")
+world_map <- vect(world_sf)
 
-# Visualización global con líneas de referencia
+# 4. Visualización global (Ahora terra::plot() controlará el gráfico)
 plot(world_map, col = "antiquewhite", border = "gray50",
      main = "Distribución Cruda de M. bevirostris (Sin Curaduría)",
      background = "aliceblue",
      mar = c(3, 3, 2, 2))
 
+# Añadimos los puntos empíricos
 plot(occ_raw_vect, col = "darkred", pch = 20, cex = 0.8, add = TRUE)
-abline(h = 0, v = 0, col = "blue", lty = 2) # Identificación de Null Island
+
+# Líneas de referencia para identificar errores de "Null Island"
+abline(h = 0, v = 0, col = "blue", lty = 2)
 ```
 
 #### 3. Limpieza Temática, Temporal y Espacial
