@@ -148,11 +148,11 @@ plot(zona_estudio, main = "Registros en el Área Accesible (M)", col = "aliceblu
 plot(occ_M, col = "darkred", pch = 20, cex = 1.2, add = TRUE)
 ```
 
-#### 5. Rarefacción Espacial (Mitigación del Sesgo de Muestreo)
-Justificación Teórica: Los esfuerzos de recolección biológica no son aleatorios; tienden a concentrarse cerca de infraestructura humana. Si no se corrige este clumping (spatial bias), el modelo caracterizará el sesgo del observador en lugar del nicho de la especie. Utilizar algoritmos de thinning garantiza que los datos de entrada sean espacial e independientemente robustos, otorgando el mismo peso probabilístico a diferentes condiciones ambientales.
+#### 5. Spatial thining
+Los esfuerzos de muestreo no son aleatorios; tienden a concentrarse cerca de infraestructura humana. Se debe de corrigir este *spatial bias*.
 
 ```r
-# --- 5. RAREFACCIÓN ESPACIAL (THINNING) ---
+# --- 5. SPATIAL THINNING ---
 
 # Aplicación de spThin sobre los datos recortados
 # Nota para alumnos: verifiquen qué data.frame están introduciendo aquí.
