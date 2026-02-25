@@ -35,14 +35,144 @@ aún no presentan registros de esta especie. Ya que *M. yarae* es simpátrica co
 
 El archivo se encuentra dentro de la carpeta [input](https://github.com/Valle-dotcom/Mobula_yarae_niche/tree/main/input) con el nombre de *m_birostris.csv* Este es el [DOI](https://doi.org/10.15468/dl.jnav8h) con los metadatos de la base de datos descargada 
 
+### 1) Datos de ocurrencia
+#### 1. Preparación del Entorno y Carga de Datos 
+Antes de iniciar cualquier, es necesario establecer un entorno de trabajo limpio y cargar todos los paquetes al inicio para asegurar que las funciones necesarias estén disponibles. 
 
-Recuerda primero establecer tu directorio de trabajo con setwd()
-
-A continuación procederemos a leer el archivo con los registros que vamos a depurar
 ```r
-x <- c(1, 2, 3)
-mean(x)
+# --- 1. PREPARACIÓN DEL ENTORNO ---
+
+# Carga de librerías para manejo de datos, limpieza y análisis espacial
+library(dplyr)
+library(CoordinateCleaner)
+library(terra)
+library(geodata)
+library(spThin)
+
+# Definición del directorio de trabajo e importación
+setwd("ruta")
+occurrences_raw <- read.csv("m_bevirostris.csv")
 ```
+
+#### 2. Exploración Visual del Espacio Geográfico
+Visualizar los datos crudos permite realizar un diagnóstico rápido para detectar errores comunes 
+
+```r
+# --- 2. EXPLORACIÓN VISUAL CRUDA ---
+
+# Filtro de seguridad informático básico para poder graficar
+occ_plot <- occurrences_raw[!is.na(occurrences_raw$decimalLongitude) & 
+                            !is.na(occurrences_raw$decimalLatitude), ]
+
+# Conversión a vector espacial
+occ_raw_vect <- vect(occ_plot, 
+                     geom = c("decimalLongitude", "decimalLatitude"), 
+                     crs = "EPSG:4326")
+
+# Descarga de mapa base
+world_map <- world(path = tempdir())
+
+# Visualización global con líneas de referencia
+plot(world_map, col = "antiquewhite", border = "gray50",
+     main = "Distribución Cruda de M. bevirostris (Sin Curaduría)",
+     background = "aliceblue",
+     mar = c(3, 3, 2, 2))
+
+plot(occ_raw_vect, col = "darkred", pch = 20, cex = 0.8, add = TRUE)
+abline(h = 0, v = 0, col = "blue", lty = 2) # Identificación de Null Island
+```
+
+#### 3. Limpieza Temática, Temporal y Espacial
+Este bloque es el núcelo de la limpieza de datos. 
+
+```r
+# --- 3. LIMPIEZA RIGUROSA ---
+
+# Selección de columnas críticas
+occurrences <- occurrences_raw %>% 
+  dplyr::select(gbifID, species, decimalLongitude, decimalLatitude, 
+                countryCode, stateProvince, locality, year)
+
+# Filtro temporal (1955-2010)
+occurrences <- subset(occurrences, year >= 1955 & year <= 2010)
+
+# Remoción de NAs y ceros en coordenadas
+occurrences <- occurrences[!is.na(occurrences$decimalLongitude) | !is.na(occurrences$decimalLatitude), ]
+occurrences <- occurrences[occurrences$decimalLongitude != 0 & occurrences$decimalLatitude != 0, ]
+occurrences <- occurrences[!is.na(occurrences$year), ]
+
+# Función de precisión decimal y filtro (retener > 2 decimales)
+decimalplaces <- function(x) {
+  if (abs(x - round(x)) > .Machine$double.eps^0.5) {
+    nchar(strsplit(sub('0+$', '', as.character(x)), ".", fixed = TRUE)[[1]][[2]])
+  } else {
+    return(0)
+  }
+}
+occurrences <- occurrences[sapply(occurrences$decimalLongitude, decimalplaces) > 2 &
+                           sapply(occurrences$decimalLatitude, decimalplaces) > 2, ]
+
+# Limpieza de duplicados con CoordinateCleaner
+occurrences <- cc_dupl(occurrences, lon = "decimalLongitude", lat = "decimalLatitude", species = "species")
+```
+
+#### 4. Delimitación dentro de la Área M
+Según el diagrama BAM, el algoritmo debe entrenarse exclusivamente dentro de las regiones que la especie ha podido explorar a lo largo de su historia evolutiva (el área M).
+
+```r
+# --- 4. RESTRICCIÓN AL ÁREA DE ESTUDIO (M) ---
+
+# Vectorización de los datos limpios
+occ_vect <- vect(occurrences, 
+                 geom = c("decimalLongitude", "decimalLatitude"), 
+                 crs = "EPSG:4326")
+
+# Carga del polígono de estudio
+zona_estudio <- vect("D:/lab/Clases/shapefiles/mi_zona_estudio.shp")
+
+# Homologación de sistemas de referencia (CRS)
+if (crs(occ_vect) != crs(zona_estudio)) {
+  message("Reproyectando shapefile...")
+  zona_estudio <- project(zona_estudio, crs(occ_vect))
+}
+
+# Recorte espacial (Clipping)
+occ_M <- occ_vect[zona_estudio, ]
+
+# Respaldo de datos restringidos a M
+occ_finales_df <- as.data.frame(occ_M, geom = "XY")
+write.csv(occ_finales_df, "m_bevirostris_dentro_M.csv", row.names = FALSE)
+
+# Comprobación visual
+plot(zona_estudio, main = "Registros en el Área Accesible (M)", col = "aliceblue")
+plot(occ_M, col = "darkred", pch = 20, cex = 1.2, add = TRUE)
+```
+
+#### 5. Rarefacción Espacial (Mitigación del Sesgo de Muestreo)
+Justificación Teórica: Los esfuerzos de recolección biológica no son aleatorios; tienden a concentrarse cerca de infraestructura humana. Si no se corrige este clumping (spatial bias), el modelo caracterizará el sesgo del observador en lugar del nicho de la especie. Utilizar algoritmos de thinning garantiza que los datos de entrada sean espacial e independientemente robustos, otorgando el mismo peso probabilístico a diferentes condiciones ambientales.
+
+```r
+# --- 5. RAREFACCIÓN ESPACIAL (THINNING) ---
+
+# Aplicación de spThin sobre los datos recortados
+# Nota para alumnos: verifiquen qué data.frame están introduciendo aquí.
+p1 <- thin(loc.data = occ_finales_df, 
+           lat.col = "y", long.col = "x", 
+           spec.col = "species", 
+           thin.par = 5, reps = 100, 
+           locs.thinned.list.return = TRUE, 
+           write.files = TRUE,
+           max.files = 1,
+           out.dir = "E:/lab/tesis/bd_5",
+           out.base = "thinned",
+           write.log.file = FALSE)
+
+# Visualización y resumen del adelgazamiento espacial
+plotThin(p1)
+summaryThin(p1)
+```
+
+
 - Objetivo:
 - Requisitos:
 - Instalación:
