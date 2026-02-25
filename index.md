@@ -173,7 +173,7 @@ summaryThin(p1)
 ```
 
 
-* CONTINUARÁ..........*
+*CONTINUARÁ..........*
 
 <a id="paso-2"></a>
 ## Paso 2 — Datos
