@@ -5,7 +5,7 @@ La mantarraya del Atlántico (*Mobula yarae*) como parte del módulo de ecologí
 
 En este [sitio](https://valle-dotcom.github.io/Mobula_yarae_niche/) se encuentra el manual con las instrucciones paso por paso. 
 
-Los archivos y scripts necesarios se localizan en las carpetas correspondientes en este repositorio.
+Los archivos y scripts necesarios se localizan en esta [carpeta de drive](https://drive.google.com/drive/folders/1ZvZBpC2001-sltgfFDl0ceYIPxJFQYG7?usp=drive_link) correspondientes en este repositorio.
 
 Este repositorio se irá actualizando conforme el avance en las sesiones
 
