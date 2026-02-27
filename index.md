@@ -178,6 +178,107 @@ p1 <- thin(loc.data = occ_finales_df,
 plotThin(p1)
 summaryThin(p1)
 ```
+### 2) Variables ambientales
+#### 1. Preparación del Entorno y Carga de Datos 
+
+```r
+# --- 1. PREPARACIÓN ---
+
+install.packages(c("terra","predicts","corrplot","rJava"))
+
+library(terra)
+library(predicts)
+#instalar Java, descargar maxent, system.file("java", package="predicts")
+library(corrplot)
+library(rJava)
+
+#Objetos
+
+
+# 1. Cargar variables
+
+clima_M <- rast("C:/Users/jovac/Downloads/MARSPEC_5m/Variables/MARSPEC_recortado.tif")
+print(names(clima_M)) # Comprobamos las 18 variables
+
+# 2. Cargar las presencias
+
+
+# 1. Leer el archivo CSV 
+tabla_presencias <- read.csv("D:/lab/Clases/myarae_niche/m_yarae.csv")
+
+print(names(tabla_presencias))
+
+# 2. Convertir la tabla a un objeto espacial (SpatVector)
+
+occ_thin <- vect(tabla_presencias, 
+                 geom = c("longitude", "latitude"),  
+                 crs = "EPSG:4326")
+
+print(occ_thin)
+
+# Opcional: Una comprobación visual rápida para asegurar que los puntos caen sobre el mapa
+plot(clima_M[[1]], main = "Comprobación de Datos Cargados")
+plot(occ_thin, add = TRUE, col = "red", pch = 16, cex = 0.5)
+
+```
+#### 2. Jacknnife en maxent
+```r
+# --- 2. JACKNIFE MAXENT---
+
+
+# Definimos el vector de argumentos (args) 
+mis_argumentos <- c(
+  "autofeature=false",   
+  "linear=true",         
+  "quadratic=true",      
+  "product=true",        
+  "hinge=false",         
+  "threshold=false",     
+  "responsecurves=true", 
+  "pictures=true",       
+  "jackknife=true",      
+  "outputformat=raw",    
+  "outputfiletype=asc"   
+)
+library(terra)
+library(predicts)
+
+
+coords_presencia <- crds(occ_thin)
+
+puntos_fondo <- spatSample(clima_M, size = 10000, method = "random", na.rm = TRUE, xy = TRUE)
+
+coords_fondo <- puntos_fondo[, c("x", "y")]
+
+
+
+
+
+# Ejecutamos el modelo 
+modelo_exploratorio <- MaxEnt(x = clima_M, 
+                              p = coords_presencia, 
+                              a = coords_fondo,
+                              args = mis_argumentos)
+
+# Diagnóstico
+plot(modelo_exploratorio, main = "Importancia de Variables (L, Q, P - Raw)")
+modelo_exploratorio # Abre el HTML en el navegador
+```
+#### 2. Correlación de Pearson
+```r
+# --- 3. EXTRACCIÓN Y CORRELACIÓN DE PEARSON ---
+
+# Extraer valores climáticos
+valores_presencia <- extract(clima_M, occ_thin, ID = FALSE)
+valores_presencia <- na.omit(valores_presencia)
+
+# Matriz de correlación y visualización
+matriz_cor <- cor(valores_presencia)
+corrplot(matriz_cor, method = "number", type = "lower", 
+         tl.col = "black", tl.cex = 0.8, number.cex = 0.7,
+         main = "Matriz de Correlación de Pearson")
+```
+
 
 
 *CONTINUARÁ..........*
